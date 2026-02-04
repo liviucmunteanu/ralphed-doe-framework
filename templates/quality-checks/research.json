@@ -1,0 +1,52 @@
+{
+    "domain": "research",
+    "description": "Quality checks for research and investigation tasks",
+    "checks": [
+        {
+            "id": "citations",
+            "name": "Citation Verification",
+            "description": "All claims must have verifiable sources",
+            "criteria": [
+                "Every factual claim has a source citation",
+                "Sources are accessible and can be verified",
+                "Citation format is consistent"
+            ],
+            "required": true
+        },
+        {
+            "id": "coverage",
+            "name": "Topic Coverage",
+            "description": "Ensure comprehensive coverage of research topic",
+            "criteria": [
+                "All specified subtopics addressed",
+                "No major gaps in coverage",
+                "Depth appropriate to requirements"
+            ],
+            "required": true
+        },
+        {
+            "id": "source_quality",
+            "name": "Source Quality",
+            "description": "Evaluate authority and credibility of sources",
+            "criteria": [
+                "Primary sources preferred over secondary",
+                "Sources are current (within last 2-3 years unless historical)",
+                "Mix of academic, industry, and authoritative sources",
+                "Avoid unreliable or biased sources"
+            ],
+            "required": true
+        },
+        {
+            "id": "accuracy",
+            "name": "Factual Accuracy",
+            "description": "Cross-reference key facts",
+            "criteria": [
+                "Key statistics verified from multiple sources",
+                "Dates and numbers double-checked",
+                "Names and titles accurate"
+            ],
+            "required": true
+        }
+    ],
+    "passCriteria": "Research must be well-sourced, comprehensive, and accurate"
+}

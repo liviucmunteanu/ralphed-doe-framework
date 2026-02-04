@@ -1,0 +1,39 @@
+{
+    "id": "001-example-name",
+    "name": "Example Automation Name",
+    "domain": "coding|research|writing|documentation|other",
+    "description": "Clear description of what this automation accomplishes",
+    "branchName": "ralph/example-name",
+    "tasks": [
+        {
+            "id": "T-001",
+            "title": "First task title",
+            "description": "Clear description of what to accomplish in this task",
+            "acceptanceCriteria": [
+                "First verifiable criterion",
+                "Second verifiable criterion",
+                "Domain-specific quality check passes"
+            ],
+            "priority": 1,
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "T-002",
+            "title": "Second task title (depends on T-001)",
+            "description": "Description of the second task",
+            "acceptanceCriteria": [
+                "Criterion that builds on T-001",
+                "Another verifiable criterion"
+            ],
+            "priority": 2,
+            "passes": false,
+            "notes": ""
+        }
+    ],
+    "qualityChecks": "coding",
+    "deliverables": [
+        "List of expected outputs",
+        "Files, documents, or artifacts to produce"
+    ]
+}

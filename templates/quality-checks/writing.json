@@ -1,0 +1,63 @@
+{
+    "domain": "writing",
+    "description": "Quality checks for content creation and writing tasks",
+    "checks": [
+        {
+            "id": "grammar",
+            "name": "Grammar and Spelling",
+            "description": "Ensure text is error-free",
+            "tools": [
+                "Grammarly",
+                "LanguageTool",
+                "ProWritingAid",
+                "Built-in spell check"
+            ],
+            "criteria": [
+                "No grammatical errors",
+                "No spelling mistakes",
+                "Consistent punctuation"
+            ],
+            "required": true
+        },
+        {
+            "id": "readability",
+            "name": "Readability Score",
+            "description": "Appropriate reading level for target audience",
+            "metrics": [
+                "Flesch-Kincaid Grade Level",
+                "Flesch Reading Ease",
+                "Gunning Fog Index"
+            ],
+            "criteria": [
+                "Reading level matches target audience",
+                "Sentences not overly complex",
+                "Technical jargon explained when needed"
+            ],
+            "required": true
+        },
+        {
+            "id": "format",
+            "name": "Format Compliance",
+            "description": "Follows specified style guide and format",
+            "criteria": [
+                "Headings and structure match template",
+                "Consistent formatting throughout",
+                "Required sections present",
+                "Word count within bounds (if specified)"
+            ],
+            "required": true
+        },
+        {
+            "id": "completeness",
+            "name": "Content Completeness",
+            "description": "All required content is present",
+            "criteria": [
+                "All sections from brief are addressed",
+                "No placeholder text remaining",
+                "Conclusion/call-to-action present if required"
+            ],
+            "required": true
+        }
+    ],
+    "passCriteria": "Writing must be polished, readable, and complete"
+}

@@ -1,0 +1,64 @@
+{
+    "domain": "coding",
+    "description": "Quality checks for software development tasks",
+    "checks": [
+        {
+            "id": "security",
+            "name": "Security Analysis",
+            "description": "Run security scanners to identify vulnerabilities",
+            "commands": [
+                "npm audit",
+                "npx snyk test",
+                "bandit -r . (Python)",
+                "gosec ./... (Go)"
+            ],
+            "required": true
+        },
+        {
+            "id": "typecheck",
+            "name": "Type Checking",
+            "description": "Verify type correctness",
+            "commands": [
+                "tsc --noEmit",
+                "mypy . (Python)",
+                "go vet ./... (Go)"
+            ],
+            "required": true
+        },
+        {
+            "id": "tests",
+            "name": "Test Suite",
+            "description": "Run all relevant test suites",
+            "commands": [
+                "npm test",
+                "pytest",
+                "go test ./..."
+            ],
+            "required": true
+        },
+        {
+            "id": "quality",
+            "name": "Code Quality",
+            "description": "Lint, format, and code quality checks",
+            "commands": [
+                "npm run lint",
+                "prettier --check .",
+                "eslint .",
+                "ruff check . (Python)"
+            ],
+            "required": true
+        },
+        {
+            "id": "browser",
+            "name": "Browser Verification",
+            "description": "Visually verify UI changes in browser",
+            "commands": [
+                "Use MCP Playwright tools to navigate and verify",
+                "Take screenshot for progress log"
+            ],
+            "required": "For frontend/UI tasks only",
+            "condition": "acceptanceCriteria contains UI-related items"
+        }
+    ],
+    "passCriteria": "All required checks must pass before marking task complete"
+}

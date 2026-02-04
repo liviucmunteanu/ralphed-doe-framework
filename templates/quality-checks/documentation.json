@@ -1,0 +1,60 @@
+{
+    "domain": "documentation",
+    "description": "Quality checks for technical documentation tasks",
+    "checks": [
+        {
+            "id": "links",
+            "name": "Link Validation",
+            "description": "All links are valid and accessible",
+            "tools": [
+                "markdown-link-check",
+                "linkchecker",
+                "Manual verification for internal links"
+            ],
+            "criteria": [
+                "No broken links (404s)",
+                "External links open correctly",
+                "Internal navigation works",
+                "Anchor links resolve properly"
+            ],
+            "required": true
+        },
+        {
+            "id": "api_accuracy",
+            "name": "API Accuracy",
+            "description": "Code examples and API references are correct",
+            "criteria": [
+                "Function signatures match actual code",
+                "Parameter descriptions accurate",
+                "Return types documented correctly",
+                "Deprecated items marked appropriately"
+            ],
+            "required": true
+        },
+        {
+            "id": "examples",
+            "name": "Example Testing",
+            "description": "Code examples are functional and tested",
+            "criteria": [
+                "All code examples compile/run without errors",
+                "Examples demonstrate the documented feature",
+                "Copy-paste ready (no hidden dependencies)",
+                "Output matches documented expectations"
+            ],
+            "required": true
+        },
+        {
+            "id": "structure",
+            "name": "Documentation Structure",
+            "description": "Follows documentation standards",
+            "criteria": [
+                "Consistent heading hierarchy",
+                "Table of contents accurate (if present)",
+                "Prerequisites clearly stated",
+                "Examples follow setup instructions"
+            ],
+            "required": true
+        }
+    ],
+    "passCriteria": "Documentation must be accurate, navigable, and have working examples"
+}

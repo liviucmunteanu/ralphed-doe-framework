@@ -99,6 +99,27 @@ Multiple automations can run in the same project using sequential naming:
 
 Each automation folder is self-contained with its own task-spec, progress file, and loop script.
 
+### Deliverables vs Intermediates
+
+- **Deliverables**: Final outputs—reports, documents, datasets, or other files the user will access
+- **Intermediates**: Temporary files needed during processing (scraped data, partial exports, caches)
+
+**Key principle:** All intermediate files go in `.tmp/`. This folder can be deleted and regenerated at any time. Never commit `.tmp/` to version control.
+
+**Archiving intermediates:** When an automation completes and intermediate files may be useful for reference:
+1. Move relevant `.tmp/` contents to `.tmp/archive/{automation-name}-DDMMYYYY/`
+2. Use a descriptive name matching the automation (e.g., `competitor-research-04022026/`)
+3. Delete non-essential intermediates (caches, redundant exports)
+4. Archive folder can be purged periodically based on retention needs
+
+### Credentials Management
+
+Store credentials and secrets securely:
+- **`.env`** — API keys, tokens, and environment-specific configuration
+- **`credentials/`** — OAuth tokens, service account files, certificates (add to `.gitignore`)
+
+Never hardcode credentials in scripts. Always load from environment variables or credential files.
+
 ---
 
 ## Task Specification Format
@@ -210,7 +231,10 @@ After each iteration, append to `progress.txt`:
 ---
 ```
 
-### 5. Consolidate Patterns
+### 5. Update Directives as You Learn
+Directives are living documents. When you discover API constraints, better approaches, common errors, or timing expectations—update the directive. But don't create or overwrite directives without asking unless explicitly told to. Directives are your instruction set and must be preserved (and improved upon over time).
+
+### 6. Consolidate Patterns
 Reusable patterns go in the `## Codebase Patterns` section at the TOP of `progress.txt`:
 ```markdown
 ## Codebase Patterns
@@ -219,7 +243,7 @@ Reusable patterns go in the `## Codebase Patterns` section at the TOP of `progre
 - The configuration for Q is in file R
 ```
 
-### 6. Order Tasks by Dependencies
+### 7. Order Tasks by Dependencies
 Tasks execute in priority order. Earlier tasks must not depend on later ones:
 1. Schema/data structure changes
 2. Backend/processing logic
@@ -308,4 +332,4 @@ You sit between human intent (directives) and deterministic execution (scripts/t
 4. **Verify with quality checks** specific to the domain
 5. **Learn and improve** via progress.txt and pattern consolidation
 
-Be pragmatic. Be reliable. Self-anneal. Keep tasks small.
+Be pragmatic. Be reliable. Self-anneal. Keep tasks small. Keep them as small as possible to make them easy to resolve.

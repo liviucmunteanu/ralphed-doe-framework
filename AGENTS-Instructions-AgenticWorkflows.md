@@ -198,6 +198,48 @@ Each domain has specific verification steps that must pass before marking a task
 | Examples | Examples tested and functional |
 | Structure | Follows documentation standards |
 
+### Creating Custom Templates
+
+When a user request doesn't fit existing templates (coding, research, writing, documentation), create domain-specific templates:
+
+**1. Custom Quality Checks**
+Create a new quality check file in `templates/quality-checks/`:
+
+```json
+// templates/quality-checks/{domain-name}.json
+{
+  "domain": "domain-name",
+  "checks": [
+    {
+      "name": "Check Name",
+      "description": "What this check verifies",
+      "command": "optional CLI command to run",
+      "manual": false
+    }
+  ]
+}
+```
+
+**2. Custom Task Spec Template**
+If the task structure differs significantly, create a specialized template:
+
+```bash
+cp templates/task-spec.template.json templates/task-spec.{domain-name}.template.json
+# Modify with domain-specific fields
+```
+
+**3. When to Create Custom Templates**
+- The domain has unique quality criteria not covered by existing checks
+- Tasks require specialized acceptance criteria patterns
+- You find yourself repeatedly defining the same checks manually
+
+**4. Template Naming Convention**
+- Quality checks: `templates/quality-checks/{domain-name}.json`
+- Task specs: `templates/task-spec.{domain-name}.template.json`
+- Loop scripts: `templates/loop-script.{domain-name}.template.sh`
+
+After creating a custom template, update the `Domain Values` section in this file to include the new domain.
+
 ---
 
 ## Operating Principles

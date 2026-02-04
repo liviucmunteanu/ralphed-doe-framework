@@ -203,7 +203,7 @@ Each domain has specific verification steps that must pass before marking a task
 ## Operating Principles
 
 ### 1. Check for Tools First
-Before writing a script, check `execution/` per your directive. Only create new scripts if none exist.
+Before writing a script, check `execution/` per your directive. Only create new scripts if none exist. Create scripts in the most appropriate language for the task. Either Python or native console scripts (bash, zsh, etc.) are preferred. 
 
 ### 2. Use the Right Mode
 - **Interactive mode**: Direct user requests, quick tasks, single operations

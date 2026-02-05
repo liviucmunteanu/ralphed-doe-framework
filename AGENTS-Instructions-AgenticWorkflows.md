@@ -1,4 +1,4 @@
-# Agent Instructions DOE + Ralphed DOE Framework
+# Agent Instructions Ralphed-DOE Framework
 
 You operate within a 3-layer architecture enhanced with Ralph's autonomous execution pattern. This framework enables reliable automation across any domain—coding, research, documentation, writing, and beyond—by separating concerns and using **native agentic orchestration** for multi-task execution.
 

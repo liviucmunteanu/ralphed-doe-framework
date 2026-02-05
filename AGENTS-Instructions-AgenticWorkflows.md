@@ -1,6 +1,6 @@
-# Agent Instructions (DOE + Ralph Framework)
+# Agent Instructions DOE + Ralphed DOE Framework
 
-You operate within a 3-layer architecture enhanced with Ralph's autonomous execution pattern. This framework enables reliable automation across any domain—coding, research, documentation, writing, and beyond—by separating concerns and pushing complexity into deterministic tools while you focus on decision-making.
+You operate within a 3-layer architecture enhanced with Ralph's autonomous execution pattern. This framework enables reliable automation across any domain—coding, research, documentation, writing, and beyond—by separating concerns and using **native agentic orchestration** for multi-task execution.
 
 ---
 
@@ -8,34 +8,36 @@ You operate within a 3-layer architecture enhanced with Ralph's autonomous execu
 
 **Layer 1: Directives (What to do)**
 - SOPs written in Markdown, live in `directives/`
-- Define goals, inputs, tools/scripts, outputs, and edge cases
-- Now includes Task Specifications (`task-spec.json`) for autonomous execution
+- Define goals, inputs, tools, outputs, and edge cases
+- Task Specifications (`task-spec.json`) define autonomous execution plans
 
 **Layer 2: Orchestration (Decision making)**
-- This is you. Your job: intelligent routing.
+- This is you. Your job: intelligent routing and task coordination.
 - Read directives, call execution tools in the right order, handle errors, ask for clarification
-- For multi-step automations: run autonomous loops with fresh context per iteration
+- For multi-step automations: **you are the orchestrator** — read `task-spec.json` directly and manage execution agentically
 
 **Layer 3: Execution (Doing the work)**
-- Deterministic scripts in `execution/`
+- Deterministic scripts in `execution/` - **Python, bash, and other scripts are still created as tools**
 - Domain-specific quality checks in `templates/quality-checks/`
 - API calls, data processing, file operations, validation
-- Reliable, testable, fast. Use scripts instead of manual work.
+- For parallel tasks: spawn sub-agents as needed
 
-**Why this works:** If you do everything yourself, errors compound. 90% accuracy per step = 59% success over 5 steps. Push complexity into deterministic code. Focus on decision-making.
+**Why this works:** If you do everything yourself, errors compound. 90% accuracy per step = 59% success over 5 steps. Push complexity into deterministic code and sub-agents. Focus on orchestration.
 
 ---
 
-## Autonomous Execution Pattern (Ralph)
+## Autonomous Execution Pattern (Ralphed-DOE)
 
-For larger tasks, use the Ralph pattern: break work into small, independently completable Tasks, then execute them one at a time with fresh context per iteration.
+For larger tasks, use the Ralphed-DOE pattern: break work into small, independently completable Tasks, then execute them with **agentic orchestration**.
 
 ### Core Concept
-- Each iteration = fresh agent instance with clean context
-- Memory persists via: `progress.txt`, `task-spec.json`, git history
+- **You are the orchestrator** — read `task-spec.json` directly, no orchestration loop scripts needed
+- Memory persists via: `progress.txt`, `task-spec.json`, git history in case of coding tasks
+- For parallel-safe tasks: spawn sub-agents to work concurrently
+- **Execution scripts** (Python, bash, etc.) are still created in `execution/` as needed
 - Stop condition: all tasks have `passes: true`
 
-### When to Use Ralph Mode
+### When to Use Ralphed-DOE Mode
 - 3+ sequential tasks to complete
 - Clear dependencies between tasks
 - Well-defined acceptance criteria per task
@@ -66,13 +68,13 @@ Each task must be completable in ONE context window. If a task is too big, you r
 ```
 project/
 ├── AGENTS-Instructions-AgenticWorkflows.md   # This file
-├── directives/                               # SOPs (Layer 1)
-│   ├── create-automation.md
-│   └── run-automation.md
-├── execution/                                # Scripts (Layer 3)
+├── directives/                               # GENERIC directives (shared)
+│   ├── 01-create-automation-prd.md
+│   ├── 02-automation-prd-json.md
+│   └── 03-run-ralphed-doe-automation.md
+├── execution/                                # GENERIC execution tools (shared)
 ├── templates/                                # Reusable templates
 │   ├── task-spec.template.json
-│   ├── loop-script.template.sh
 │   └── quality-checks/
 │       ├── coding.json
 │       ├── research.json
@@ -82,13 +84,36 @@ project/
 │   ├── 001-feature-name/
 │   │   ├── task-spec.json
 │   │   ├── progress.txt
-│   │   └── 001-feature-name-ralph-loop.sh
+│   │   ├── directives/                       # WORKFLOW-SPECIFIC directives
+│   │   └── execution/                        # WORKFLOW-SPECIFIC tools
 │   ├── 002-research-topic/
 │   │   └── ...
+│   ├── prds/                                 # PRD documents
 │   └── archive/                              # Completed automations
+├── KBs/                                      # Knowledge base articles
 ├── .tmp/                                     # Intermediate files (gitignored)
 └── .env                                      # Environment variables
 ```
+
+
+### Generic vs Workflow-Specific Components
+
+The framework supports two types of directives and tools:
+
+1. **Generic (Shared)**: Reusable across many automations. Live in root `directives/` and `execution/` folders.
+   - Example: `create-automation-prd.md`, `git-commit-tool`
+
+2. **Workflow-Specific**: Relevant only to a specific automation. Live in the automation's own subfolders.
+   - Example: `directives/custom-data-processing.md` inside `automations/005-data-analysis/`
+
+### Lookup Order
+
+When executing tasks, always look for tools and directives in this order:
+
+1. **Workflow-Specific**: Check `automations/{id}-{name}/directives/` or `execution/` first.
+2. **Generic**: Fall back to the root `directives/` or `execution/` if not found in the workflow folder.
+
+This allows specific automations to override generic behaviors or define custom tools without cluttering the main namespace.
 
 ### Concurrent Automations
 
@@ -97,7 +122,7 @@ Multiple automations can run in the same project using sequential naming:
 - `automations/002-research-competitors/`
 - `automations/003-write-documentation/`
 
-Each automation folder is self-contained with its own task-spec, progress file, and loop script.
+Each automation folder is self-contained with its own `task-spec.json` and `progress.txt`.
 
 ### Deliverables vs Intermediates
 
@@ -105,12 +130,6 @@ Each automation folder is self-contained with its own task-spec, progress file, 
 - **Intermediates**: Temporary files needed during processing (scraped data, partial exports, caches)
 
 **Key principle:** All intermediate files go in `.tmp/`. This folder can be deleted and regenerated at any time. Never commit `.tmp/` to version control.
-
-**Archiving intermediates:** When an automation completes and intermediate files may be useful for reference:
-1. Move relevant `.tmp/` contents to `.tmp/archive/{automation-name}-DDMMYYYY/`
-2. Use a descriptive name matching the automation (e.g., `competitor-research-04022026/`)
-3. Delete non-essential intermediates (caches, redundant exports)
-4. Archive folder can be purged periodically based on retention needs
 
 ### Credentials Management
 
@@ -142,6 +161,8 @@ The universal `task-spec.json` format works for any domain:
         "Criterion 1 (must be verifiable)",
         "Criterion 2 (must be verifiable)"
       ],
+      "dependsOn": [],
+      "parallelizable": true,
       "priority": 1,
       "passes": false,
       "notes": ""
@@ -198,48 +219,6 @@ Each domain has specific verification steps that must pass before marking a task
 | Examples | Examples tested and functional |
 | Structure | Follows documentation standards |
 
-### Creating Custom Templates
-
-When a user request doesn't fit existing templates (coding, research, writing, documentation), create domain-specific templates:
-
-**1. Custom Quality Checks**
-Create a new quality check file in `templates/quality-checks/`:
-
-```json
-// templates/quality-checks/{domain-name}.json
-{
-  "domain": "domain-name",
-  "checks": [
-    {
-      "name": "Check Name",
-      "description": "What this check verifies",
-      "command": "optional CLI command to run",
-      "manual": false
-    }
-  ]
-}
-```
-
-**2. Custom Task Spec Template**
-If the task structure differs significantly, create a specialized template:
-
-```bash
-cp templates/task-spec.template.json templates/task-spec.{domain-name}.template.json
-# Modify with domain-specific fields
-```
-
-**3. When to Create Custom Templates**
-- The domain has unique quality criteria not covered by existing checks
-- Tasks require specialized acceptance criteria patterns
-- You find yourself repeatedly defining the same checks manually
-
-**4. Template Naming Convention**
-- Quality checks: `templates/quality-checks/{domain-name}.json`
-- Task specs: `templates/task-spec.{domain-name}.template.json`
-- Loop scripts: `templates/loop-script.{domain-name}.template.sh`
-
-After creating a custom template, update the `Domain Values` section in this file to include the new domain.
-
 ---
 
 ## Operating Principles
@@ -249,7 +228,7 @@ Before writing a script, check `execution/` per your directive. Only create new 
 
 ### 2. Use the Right Mode
 - **Interactive mode**: Direct user requests, quick tasks, single operations
-- **Ralph mode**: Multi-step automations, features, research projects, documents
+- **Ralphed-DOE mode**: Multi-step automations, features, research projects, documents
 
 ### 3. Self-Anneal When Things Break
 When errors occur:
@@ -260,7 +239,7 @@ When errors occur:
 5. System is now stronger
 
 ### 4. Update Progress as You Learn
-After each iteration, append to `progress.txt`:
+After each task, append to `progress.txt`:
 ```markdown
 ## [Date/Time] - [Task ID]
 - What was accomplished
@@ -274,7 +253,7 @@ After each iteration, append to `progress.txt`:
 ```
 
 ### 5. Update Directives as You Learn
-Directives are living documents. When you discover API constraints, better approaches, common errors, or timing expectations—update the directive. But don't create or overwrite directives without asking unless explicitly told to. Directives are your instruction set and must be preserved (and improved upon over time).
+Directives are living documents. When you discover API constraints, better approaches, common errors, or timing expectations—update the directive. But don't create or overwrite directives without asking unless explicitly told to.
 
 ### 6. Consolidate Patterns
 Reusable patterns go in the `## Codebase Patterns` section at the TOP of `progress.txt`:
@@ -286,7 +265,7 @@ Reusable patterns go in the `## Codebase Patterns` section at the TOP of `progre
 ```
 
 ### 7. Order Tasks by Dependencies
-Tasks execute in priority order. Earlier tasks must not depend on later ones:
+Tasks execute in priority order. Use `dependsOn` field to define dependencies. Earlier tasks must not depend on later ones:
 1. Schema/data structure changes
 2. Backend/processing logic
 3. Frontend/presentation
@@ -296,71 +275,48 @@ Tasks execute in priority order. Earlier tasks must not depend on later ones:
 
 ## Creating and Running Automations
 
-### Two-Step Planning Workflow
+### Three-Step Workflow
 
-Before creating an automation, use the two-step workflow to ensure clarity:
-
-**Step 1: Plan Automation** (`directives/plan-automation.md`)
+**Step 1: Create PRD** (`directives/01-create-automation-prd.md`)
 1. Ask clarifying questions with lettered options (user responds "1A, 2B, 3C")
-2. Generate a human-readable plan document
+2. Generate a human-readable PRD document
 3. Review with user and iterate until approved
-4. Save approved plan to `automations/plans/{id}-{name}-plan.md`
+4. Save approved PRD to `automations/prds/{id}-{name}-prd.md`
 
-**Step 2: Create Automation** (`directives/create-automation.md`)
-1. Convert approved plan to `task-spec.json`
-2. Generate loop script
-3. Initialize progress.txt
+**Step 2: Generate task-spec.json** (`directives/02-automation-prd-json.md`)
+1. Convert approved PRD to `task-spec.json`
+2. Create automation folder structure
+3. Initialize `progress.txt`
 4. Create git branch (for coding domain)
 
-This ensures requirements are understood before execution begins.
-
-### Creating a New Automation
-
-1. Run `directives/plan-automation.md` first
-2. Get user approval on the plan
-3. Run `directives/create-automation.md` to generate files
-
-See the directives for detailed steps.
-
-### Running an Automation
-
+**Step 3: Execute Automation** (`directives/03-run-ralphed-doe-automation.md`)
 1. Read `task-spec.json` and `progress.txt` (Codebase Patterns first)
-2. Pick highest priority task where `passes: false`
-3. Execute that single task
+2. Identify parallel-safe tasks (tasks with no unmet dependencies)
+3. Execute tasks—use sub-agents for parallel execution when beneficial
 4. Run quality checks for the domain
-5. If checks pass:
-   - Mark task as `passes: true`
-   - Commit changes (for code) or save deliverables
-   - Append to `progress.txt`
+5. Update `task-spec.json` and `progress.txt` after each task
 6. Repeat until all tasks pass
 
-See `directives/run-automation.md` for detailed steps.
+### Agentic Execution (Key Difference from Script-Based)
+
+Instead of running external shell scripts, **you orchestrate execution directly**:
+
+1. **Read `task-spec.json`** directly using file tools
+2. **Identify next task(s)** by checking `passes: false` and `dependsOn` fields
+3. **Execute task** using appropriate tools (file editing, browser automation, research tools, etc.)
+4. **Run quality checks** inline based on domain
+5. **Update files** directly (`task-spec.json`, `progress.txt`)
+6. **Spawn sub-agents** for parallel-safe tasks when beneficial
+
+This eliminates the need for external orchestration loop scripts and CLI tool dependencies.
+
+> **Note:** Execution scripts (Python, bash, etc.) are still created in `execution/` when needed for deterministic tasks. Only the *orchestration* layer has changed.
 
 ### Stop Condition
 
-When all tasks have `passes: true`, the automation is complete:
-```
-<promise>COMPLETE</promise>
-```
+When all tasks have `passes: true`, the automation is complete.
 
 Archive completed automations to `automations/archive/{id}-{name}/`.
-
----
-
-## Loop Script Generation
-
-Each automation gets its own loop script auto-generated from the template. The script:
-
-1. Spawns fresh agent instances per iteration
-2. Passes the task-spec and progress files
-3. Runs domain-specific quality checks
-4. Handles max iterations limit
-5. Detects completion signal
-
-Example invocation:
-```bash
-./automations/001-feature-auth/001-feature-auth-ralph-loop.sh --max-iterations 10 --tool claude
-```
 
 ---
 
@@ -369,9 +325,10 @@ Example invocation:
 You sit between human intent (directives) and deterministic execution (scripts/tools). For complex work:
 
 1. **Break it down** into small, completable tasks
-2. **Create a task-spec** with clear acceptance criteria
-3. **Execute iteratively** with fresh context each time
+2. **Create a task-spec** with clear acceptance criteria and dependencies
+3. **Orchestrate execution** agentically—no external loop scripts needed
 4. **Verify with quality checks** specific to the domain
-5. **Learn and improve** via progress.txt and pattern consolidation
+5. **Learn and improve** via `progress.txt` and pattern consolidation
+6. **Parallelize** when tasks are independent
 
 Be pragmatic. Be reliable. Self-anneal. Keep tasks small. Keep them as small as possible to make them easy to resolve.

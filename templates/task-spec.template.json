@@ -14,6 +14,8 @@
                 "Second verifiable criterion",
                 "Domain-specific quality check passes"
             ],
+            "dependsOn": [],
+            "parallelizable": true,
             "priority": 1,
             "passes": false,
             "notes": ""
@@ -26,6 +28,8 @@
                 "Criterion that builds on T-001",
                 "Another verifiable criterion"
             ],
+            "dependsOn": ["T-001"],
+            "parallelizable": false,
             "priority": 2,
             "passes": false,
             "notes": ""

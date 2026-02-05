@@ -69,10 +69,12 @@ Each task must be completable in ONE context window. If a task is too big, you r
 project/
 ├── AGENTS-Instructions-AgenticWorkflows.md   # This file
 ├── directives/                               # GENERIC directives (shared)
+│   ├── AGENTS.md                             # Context for generic directives
 │   ├── 01-create-automation-prd.md
 │   ├── 02-automation-prd-json.md
 │   └── 03-run-ralphed-doe-automation.md
 ├── execution/                                # GENERIC execution tools (shared)
+│   └── AGENTS.md                             # Context for generic tools
 ├── templates/                                # Reusable templates
 │   ├── task-spec.template.json
 │   └── quality-checks/
@@ -81,11 +83,15 @@ project/
 │       ├── writing.json
 │       └── documentation.json
 ├── automations/                              # Active and archived runs
+│   ├── AGENTS.md                             # Context for automations root
 │   ├── 001-feature-name/
 │   │   ├── task-spec.json
 │   │   ├── progress.txt
+│   │   ├── AGENTS.md                         # Context & Self-Annealing
 │   │   ├── directives/                       # WORKFLOW-SPECIFIC directives
+│   │   │   └── AGENTS.md
 │   │   └── execution/                        # WORKFLOW-SPECIFIC tools
+│   │       └── AGENTS.md
 │   ├── 002-research-topic/
 │   │   └── ...
 │   ├── prds/                                 # PRD documents
@@ -114,6 +120,19 @@ When executing tasks, always look for tools and directives in this order:
 2. **Generic**: Fall back to the root `directives/` or `execution/` if not found in the workflow folder.
 
 This allows specific automations to override generic behaviors or define custom tools without cluttering the main namespace.
+
+### Context Persistence & Self-Annealing (AGENTS.md)
+
+Every folder in the project (automations, directives, execution, and their subfolders) must contain an `AGENTS.md` file. This file serves as the **localized brain** for that specific context.
+
+- **Purpose**: Store relevant context, architectural decisions, and "self-annealing" improvements specific to that folder.
+- **Maintenance**: Update it whenever you learn something critical that future agents working in that folder must know.
+- **Content**:
+  - Purpose of this specific folder
+  - Files contained within and their relationships
+  - "Watch out for X" warnings relevant to this folder's contents
+
+**Rule**: Always read `AGENTS.md` when entering ANY folder. Update it when you learn something new about that folder's domain.
 
 ### Concurrent Automations
 

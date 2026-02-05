@@ -25,13 +25,19 @@ Check for workflow-specific inputs first, then fall back to generic ones:
 1. `{automation_path}/directives/` (Workflow-specific)
 2. `directives/` (Generic)
 
-### 2. Read Codebase Patterns First
+### 2. Read Context & Memory
+
+Read the "shared brain" and learning logs:
 
 ```bash
+cat {automation_path}/AGENTS.md
 head -50 {automation_path}/progress.txt
 ```
 
-Look for the `## Codebase Patterns` section. These are learnings from previous iterations that you MUST follow.
+- **AGENTS.md**: High-level context, architecture, and "watch out" warnings.
+- **progress.txt**: Patterns and learnings from previous iterations.
+
+**Rule**: You MUST obey the architectural decisions and warnings in `AGENTS.md`.
 
 ### 3. Check Current State
 
@@ -105,14 +111,15 @@ Add entry at the bottom:
 ---
 ```
 
-### 10. Consolidate Patterns
+### 10. Consolidate & Self-Anneal
 
-If you discovered something **reusable** that future iterations should know, add it to the `## Codebase Patterns` section at the TOP of progress.txt.
+1. **Patterns**: Add reusable technical patterns to the top of `progress.txt`.
+2. **Context (Self-Annealing)**: Update `AGENTS.md` if you learned something critical for the *lifetime* of the automation:
+   - "We decided to use X library because Y failed."
+   - "Watch out for race conditions in Z module."
+   - "Architecture update: component A now depends on B."
 
-Only add **general patterns**, not task-specific details:
-- "Use X approach for Y situations"
-- "Always check Z when modifying W"
-- "Configuration for Q is in file R"
+**Goal**: Make the next agent smarter than you were.
 
 ## Stop Condition
 

@@ -46,6 +46,11 @@ Examples:
 ```bash
 mkdir -p automations/{id}-{name}/directives
 mkdir -p automations/{id}-{name}/execution
+
+# Initialize local context files
+echo "# Directives Context\n\n> Purpose: Store workflow-specific SOPs here." > automations/{id}-{name}/directives/AGENTS.md
+echo "# Execution Context\n\n> Purpose: Store workflow-specific scripts and tools here." > automations/{id}-{name}/execution/AGENTS.md
+```
 ```
 
 This creates:
@@ -117,7 +122,29 @@ Create initial progress file:
 
 ```
 
-### 8. Create Git Branch (if coding domain)
+### 8. Initialize AGENTS.md
+
+Create the shared brain file for the automation:
+
+```markdown
+# AGENTS Context: {Automation Name}
+
+> **Purpose**: This file serves as the shared brain for any agent working in this folder. Update it when you learn something critical that future agents (or yourself in the next step) must know.
+
+## High-Level Architecture
+- (Add architectural decisions here)
+
+## Project Constraints
+- (Add specific constraints here)
+
+## Domain Dictionary
+- (Add domain-specific terms here)
+
+## "Watch Out" Warnings
+- (Add warnings based on failures here)
+```
+
+### 9. Create Git Branch (if coding domain)
 
 For coding automations:
 ```bash
@@ -128,6 +155,9 @@ git checkout -b ralph/{name}
 
 - `automations/{id}-{name}/task-spec.json`
 - `automations/{id}-{name}/progress.txt`
+- `automations/{id}-{name}/AGENTS.md`
+- `automations/{id}-{name}/directives/AGENTS.md`
+- `automations/{id}-{name}/execution/AGENTS.md`
 - Git branch (for coding domain)
 
 ## Next Step
@@ -143,3 +173,4 @@ Before considering this directive complete:
 - [ ] Tasks ordered by dependency
 - [ ] Task dependencies defined where applicable
 - [ ] progress.txt initialized
+- [ ] AGENTS.md initialized with template

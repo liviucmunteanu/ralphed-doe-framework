@@ -1,0 +1,10 @@
+{
+  "general": {
+    "previewFeatures": true,
+    "vimMode": true,
+    "debugKeystrokeLogging": true,
+    "sessionRetention": {
+      "enabled": true
+    }
+  }
+}

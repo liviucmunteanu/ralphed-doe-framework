@@ -1,15 +1,15 @@
-# DOE + Ralph Framework
+# Ralphed-DOE Framework
 
-A template framework for building reliable AI-powered automations using a 3-layer architecture (Directives, Orchestration, Execution) enhanced with Ralph's autonomous execution pattern.
+A template framework for building reliable AI-powered automations using a **3-layer architecture** (Directives, Orchestration, Execution) enhanced with Ralph's **autonomous execution pattern**.
 
 ## What This Is
 
 This framework enables AI agents to complete complex, multi-step tasks reliably by:
 
 - **Separating concerns** — Directives define *what*, you orchestrate *how*, scripts *execute*
-- **Pushing complexity into deterministic code** — Reducing compounding LLM errors
-- **Using fresh context per iteration** — Avoiding context window exhaustion on large tasks
-- **Domain-specific quality checks** — Ensuring outputs meet standards before completion
+- **Agentic Orchestration** — The agent reads the plan and orchestrates execution directly (no shell scripts)
+- **Context Persistence** — `AGENTS.md` files act as a "shared brain" across sessions
+- **Self-Annealing** — The system gets smarter over time as agents update their context documents
 
 Works for any domain: coding, research, writing, documentation, and more.
 
@@ -27,10 +27,9 @@ rm -rf .git && git init  # Start fresh git history
 
 ```bash
 # Create environment file
-cp .env.example .env  # If example exists, or create new:
-touch .env
+cp .env.example .env  # or touch .env
 
-# Add your API keys and configuration
+# Add your API keys
 echo "OPENAI_API_KEY=your-key-here" >> .env
 echo "ANTHROPIC_API_KEY=your-key-here" >> .env
 
@@ -39,126 +38,107 @@ mkdir -p .tmp
 mkdir -p .tmp/archive
 mkdir -p credentials
 mkdir -p automations/archive
+mkdir -p automations/prds
 
-# Add to .gitignore (if not already present)
+# Add to .gitignore
 echo ".tmp/" >> .gitignore
 echo ".env" >> .gitignore
 echo "credentials/" >> .gitignore
+echo "KBs/" >> .gitignore
 ```
 
-### 3. Configure Your AI Agent
+### 3. Initialize Global Context
+
+Create the root `AGENTS.md` file:
+
+```markdown
+# Global Agent Context
+
+> **Purpose**: This file serves as the shared brain for the entire project.
+
+## High-Level Architecture
+- We use the Ralphed-DOE framework.
+- All automations live in `automations/`.
+
+## Shared Constraints
+- Valid JSON for task-specs.
+- Python/Bash for execution tools.
+```
+
+### 4. Configure Your AI Agent
 
 Copy the agent instructions to your AI tool's configuration:
 
-| AI Tool | Configuration File |
-|---------|-------------------|
-| Claude Code | `CLAUDE.md` |
-| GitHub Copilot | `AGENTS.md` |
-| Google Gemini | `GEMINI.md` |
-
 ```bash
-# Example: Set up for Claude Code
-cp AGENTS-Instructions-AgenticWorkflows.md CLAUDE.md
+# For Claude Code / Cursor / Windsurf
+cp AGENTS-Instructions-AgenticWorkflows.md .cursorrules  # or CLAUDE.md
 ```
 
 ## Directory Structure
 
 ```
 project/
-├── README.md                                 # This file
-├── AGENTS-Instructions-AgenticWorkflows.md   # Agent instructions (copy to CLAUDE.md, etc.)
-├── directives/                               # SOPs in Markdown (Layer 1)
-│   ├── plan-automation.md                    # Step 1: Plan with user
-│   ├── create-automation.md                  # Step 2: Generate automation files
-│   └── run-automation.md                     # Step 3: Execute automation
-├── execution/                                # Deterministic scripts (Layer 3)
+├── AGENTS-Instructions-AgenticWorkflows.md   # Main Agent Instructions
+├── directives/                               # GENERIC directives (shared)
+│   ├── AGENTS.md                             # Context for generic directives
+│   ├── 01-create-automation-prd.md
+│   ├── 02-automation-prd-json.md
+│   └── 03-run-ralphed-doe-automation.md
+├── execution/                                # GENERIC execution tools (shared)
+│   └── AGENTS.md                             # Context for generic tools
 ├── templates/                                # Reusable templates
 │   ├── task-spec.template.json
-│   ├── loop-script.template.sh
-│   └── quality-checks/                       # Domain-specific validation
-│       ├── coding.json
-│       ├── research.json
-│       ├── writing.json
-│       └── documentation.json
-├── automations/                              # Active automation runs
+│   └── quality-checks/
+├── automations/                              # Active and archived runs
+│   ├── AGENTS.md                             # Context for automations root
+│   ├── 001-feature-name/
+│   │   ├── task-spec.json
+│   │   ├── progress.txt
+│   │   ├── AGENTS.md                         # WORKFLOW-SPECIFIC context
+│   │   ├── directives/                       # WORKFLOW-SPECIFIC directives
+│   │   └── execution/                        # WORKFLOW-SPECIFIC tools
+│   ├── prds/                                 # PRD documents
 │   └── archive/                              # Completed automations
-├── .tmp/                                     # Intermediate files (gitignored)
-│   └── archive/                              # Archived intermediates
-├── credentials/                              # OAuth tokens, certs (gitignored)
-└── .env                                      # Environment variables (gitignored)
+├── KBs/                                      # Knowledge base articles
+└── .tmp/                                     # Intermediate files (gitignored)
 ```
 
-## Usage
+## Usage: The 3-Step Workflow
 
-### For Simple Tasks (Interactive Mode)
+For complex tasks, use the Ralphed-DOE workflow:
 
-Just ask your AI agent directly. It will check `execution/` for existing tools and use them.
+### Step 1: Create PRD
+**Goal**: Clarify requirements and get user approval.
 
-### For Complex Tasks (Ralph Mode)
-
-Use the two-step workflow:
-
-**Step 1: Plan**
 ```
-Run directives/plan-automation.md for: [describe your goal]
+Run directives/01-create-automation-prd.md for: [describe your goal]
 ```
 
-The agent will ask clarifying questions and generate a human-readable plan for your approval.
+### Step 2: Create JSON Plan
+**Goal**: Convert approved PRD into a machine-readable task spec and set up folders.
 
-**Step 2: Create & Execute**
 ```
-Run directives/create-automation.md using the approved plan
-```
-
-This generates:
-- `automations/{id}-{name}/task-spec.json` — Task definitions
-- `automations/{id}-{name}/progress.txt` — Memory across iterations
-- `automations/{id}-{name}/{name}-ralph-loop.sh` — Loop script
-
-**Step 3: Run**
-```bash
-./automations/001-feature-name/001-feature-name-ralph-loop.sh --max-iterations 10 --tool claude
+Run directives/02-automation-prd-json.md using: [path to approved PRD]
 ```
 
-## Adding Custom Scripts
+### Step 3: Run Automation
+**Goal**: The agent orchestrates the execution of tasks.
 
-Add new execution scripts to `execution/`:
-
-```python
-# execution/my_custom_tool.py
-"""
-Description of what this tool does.
-Usage: python execution/my_custom_tool.py --arg1 value
-"""
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
-
-def main():
-    # Your deterministic logic here
-    pass
-
-if __name__ == "__main__":
-    main()
 ```
-
-Update or create a directive in `directives/` that references your new tool.
+Run directives/03-run-ralphed-doe-automation.md for: automations/{id}-{name}/
+```
 
 ## Key Principles
 
-1. **Check for tools first** — Don't reinvent; use existing scripts
-2. **Self-anneal** — Errors improve the system (fix → update → test)
-3. **Keep tasks small** — Each task must complete in one context window
-4. **Update directives** — They're living documents, improve them as you learn
-5. **Archive, don't delete** — Move completed work to `archive/` folders
+1. **Context First** — Always read `AGENTS.md` when entering a folder.
+2. **Generic vs Specific** — Use workflow-specific `directives/` and `execution/` folders for custom needs.
+3. **Self-Annealing** — Update `AGENTS.md` and `progress.txt` when you learn something new.
+4. **Agent Orchestration** — You are the loop. Read `task-spec.json`, execute tasks, update status.
 
-## Learn More
+## Adding Custom Tools
 
-- [Full Agent Instructions](./AGENTS-Instructions-AgenticWorkflows.md)
-- [Plan Automation Directive](./directives/plan-automation.md)
-- [Create Automation Directive](./directives/create-automation.md)
-- [Run Automation Directive](./directives/run-automation.md)
+1. **Workflow-Specific**: Place script in `automations/{id}-{name}/execution/`. The agent checks here first.
+2. **Generic**: Place script in `execution/` if it's useful for multiple automations.
 
 ## License
 

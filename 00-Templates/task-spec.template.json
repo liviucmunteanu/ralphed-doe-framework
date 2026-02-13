@@ -1,9 +1,15 @@
 {
     "id": "001-example-name",
     "name": "Example Automation Name",
-    "domain": "coding|research|writing|documentation|other",
+    "domain": "coding|research|writing|documentation|analysis|other",
     "description": "Clear description of what this automation accomplishes",
     "branchName": "ralph/example-name",
+    "completionCriteria": "What globally defines 'done' for this entire automation",
+    "riskLevel": "low|medium|high",
+    "humanCheckpoints": [
+        "After T-002",
+        "Before final delivery"
+    ],
     "tasks": [
         {
             "id": "T-001",
@@ -17,8 +23,18 @@
             "dependsOn": [],
             "parallelizable": true,
             "priority": 1,
+            "complexity": "low",
+            "estimatedIterations": 1,
+            "actualIterations": 0,
+            "maxRetries": 3,
+            "reviewRequired": false,
+            "reviewType": "none",
             "passes": false,
-            "notes": ""
+            "blocked": false,
+            "blockerReason": "",
+            "notes": "",
+            "rollbackStrategy": "Describe what to undo if this task fails",
+            "qualityEvidence": {}
         },
         {
             "id": "T-002",
@@ -28,11 +44,23 @@
                 "Criterion that builds on T-001",
                 "Another verifiable criterion"
             ],
-            "dependsOn": ["T-001"],
+            "dependsOn": [
+                "T-001"
+            ],
             "parallelizable": false,
             "priority": 2,
+            "complexity": "medium",
+            "estimatedIterations": 1,
+            "actualIterations": 0,
+            "maxRetries": 3,
+            "reviewRequired": true,
+            "reviewType": "approval",
             "passes": false,
-            "notes": ""
+            "blocked": false,
+            "blockerReason": "",
+            "notes": "",
+            "rollbackStrategy": "Revert changes from T-002, T-001 outputs remain valid",
+            "qualityEvidence": {}
         }
     ],
     "qualityChecks": "coding",

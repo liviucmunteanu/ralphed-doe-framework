@@ -1,1 +1,3 @@
-KBs/
+.tmp/
+.env
+credentials/

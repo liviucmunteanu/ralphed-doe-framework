@@ -11,8 +11,8 @@ set -e
 AUTOMATION_ID="{{AUTOMATION_ID}}"
 AUTOMATION_NAME="{{AUTOMATION_NAME}}"
 DOMAIN="{{DOMAIN}}"
-TASK_SPEC="./task-spec.json"
-PROGRESS_FILE="./progress.txt"
+TASK_SPEC="./${AUTOMATION_NAME}-spec.json"
+PROGRESS_FILE="./${AUTOMATION_NAME}-progress.txt"
 
 # === ARGUMENTS ===
 MAX_ITERATIONS=${1:-10}
@@ -83,16 +83,16 @@ run_iteration() {
 Domain: $DOMAIN
 
 1. Read the task specification at $TASK_SPEC
-2. Read progress.txt (check Codebase Patterns section first if it exists)
+2. Read $PROGRESS_FILE (check Codebase Patterns section first if it exists)
 3. Pick the highest priority task where passes=false
 4. Execute ONLY that single task
 5. Run quality checks for domain '$DOMAIN'
 6. If checks pass:
-   - Update task-spec.json to set passes=true for the completed task
-   - Append your progress to progress.txt
+   - Update $TASK_SPEC to set passes=true for the completed task
+   - Append your progress to $PROGRESS_FILE
 7. If ALL tasks now pass, output: <promise>COMPLETE</promise>
 
-Work on ONE task only. Be thorough. Update progress.txt with learnings."
+Work on ONE task only. Be thorough. Update $PROGRESS_FILE with learnings."
 
     # Run the agent
     case $TOOL in

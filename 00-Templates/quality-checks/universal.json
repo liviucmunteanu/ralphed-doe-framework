@@ -1,0 +1,54 @@
+{
+    "domain": "universal",
+    "description": "Quality checks that apply to ALL domains. These always run in addition to domain-specific checks.",
+    "checks": [
+        {
+            "id": "hallucination_check",
+            "name": "Hallucination Prevention",
+            "description": "Verify no fabricated content exists in deliverables",
+            "criteria": [
+                "All factual claims have verifiable sources (URL, doc reference, or data file)",
+                "No invented statistics, names, dates, or citations",
+                "Uncertain claims flagged with [NEEDS VERIFICATION] rather than fabricated",
+                "Sources cited inline and/or in a references section"
+            ],
+            "required": true
+        },
+        {
+            "id": "consistency_check",
+            "name": "Internal Consistency",
+            "description": "Verify deliverable is internally consistent and aligned with project context",
+            "criteria": [
+                "No contradictions within the deliverable itself",
+                "Terminology used consistently throughout",
+                "Cross-referenced against AGENTS.md and progress.txt for alignment",
+                "Numbers, dates, and names consistent across all sections"
+            ],
+            "required": true
+        },
+        {
+            "id": "traceability",
+            "name": "Traceability",
+            "description": "Every output traces back to a defined requirement",
+            "criteria": [
+                "Every deliverable traces back to a PRD requirement or acceptance criterion",
+                "No scope creep beyond defined tasks",
+                "All changes documented in progress.txt with clear rationale"
+            ],
+            "required": true
+        },
+        {
+            "id": "completeness_check",
+            "name": "Completeness",
+            "description": "All required content is present with no gaps",
+            "criteria": [
+                "All acceptance criteria addressed and verifiable",
+                "No placeholder text remaining (no TODO, FIXME, TBD, or lorem ipsum)",
+                "No sections left empty or partially filled",
+                "Edge cases and error states considered where applicable"
+            ],
+            "required": true
+        }
+    ],
+    "passCriteria": "ALL universal checks must pass. These are non-negotiable quality gates applied to every task regardless of domain."
+}

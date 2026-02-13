@@ -1,0 +1,55 @@
+{
+    "domain": "analysis",
+    "description": "Quality checks for data analysis, strategy, planning, and decision-support tasks",
+    "checks": [
+        {
+            "id": "data_integrity",
+            "name": "Data Integrity",
+            "description": "Verify data is complete, accurate, and properly handled",
+            "criteria": [
+                "All data sources clearly identified with provenance",
+                "Data transformations documented step-by-step",
+                "No unexplained data loss or filtering",
+                "Raw data preserved or referenced for reproducibility"
+            ],
+            "required": true
+        },
+        {
+            "id": "methodology",
+            "name": "Methodology Soundness",
+            "description": "Verify analytical approach is rigorous and justified",
+            "criteria": [
+                "Analytical approach clearly stated and justified",
+                "Limitations and constraints explicitly acknowledged",
+                "Alternative methods considered and rationale for chosen approach documented",
+                "Sample sizes and confidence levels noted where applicable"
+            ],
+            "required": true
+        },
+        {
+            "id": "conclusions",
+            "name": "Conclusion Validity",
+            "description": "Verify conclusions are supported by the analysis",
+            "criteria": [
+                "Every conclusion directly supported by presented data or analysis",
+                "No logical fallacies or unsupported leaps",
+                "Actionable recommendations provided where appropriate",
+                "Confidence level or uncertainty range stated for key findings"
+            ],
+            "required": true
+        },
+        {
+            "id": "bias_check",
+            "name": "Bias Assessment",
+            "description": "Check for selection, confirmation, or framing biases",
+            "criteria": [
+                "Data selection criteria transparent and justified",
+                "Counterarguments or opposing data points acknowledged",
+                "Framing does not mislead about the strength of conclusions",
+                "Assumptions listed explicitly"
+            ],
+            "required": true
+        }
+    ],
+    "passCriteria": "Analysis must be methodologically sound, data-backed, and free from unacknowledged biases"
+}
